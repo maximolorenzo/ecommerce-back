@@ -1,0 +1,13 @@
+<section>
+  <div>
+    <h1>Ticket</h1>
+
+    {{#if ticket}}
+      <h2>¡Compra realizada con éxito!</h2>
+      <p>Código de la compra: {{ticket.code}}</p>
+      <p>Valor total: {{ticket.amount}}</p>
+      <p>Comprador: {{ticket.purchaser}}</p>
+    {{/if}}
+
+  </div>
+</section>

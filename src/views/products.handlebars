@@ -1,0 +1,46 @@
+<form action="/api/session/profile" method="get">
+  <button type="submit">
+    ir al perfil
+  </button>
+</form>
+<form action="/api/session/logout" method="get">
+  <button type="submit"> log out</button>
+</form>
+<form action="/api/carts/{{cid}}" method="get">
+  <button type="submit"> cart</button>
+</form>
+<h1>Products</h1>
+<div>
+  <table>
+
+    <tr>
+      <td><strong>Producto</strong></td>
+      <td><strong>Descripción</strong></td>
+      <td><strong>Precio</strong></td>
+      <td><strong>Código</strong></td>
+      <td><strong>Stock</strong></td>
+      <td><strong>Categoría</strong></td>
+    </tr>
+    {{#each data.docs}}
+      <div>
+        <tr>
+          <td>{{this.title}}</td>
+          <td>{{this.description}}</td>
+          <td>{{this.price}}</td>
+          <td>{{this.code}}</td>
+          <td>{{this.stock}}</td>
+          <td>{{this.category}}</td>
+          <td>
+            <input
+              type="submit"
+              value="add to cart"
+              method="post"
+              action="/api/carts/:cid"
+            />
+          </td>
+        </tr>
+      </div>
+
+    {{/each}}
+  </table>
+</div>

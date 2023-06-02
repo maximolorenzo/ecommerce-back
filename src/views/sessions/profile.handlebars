@@ -1,0 +1,24 @@
+<div>
+  <h1>Profile</h1>
+
+  <h2>Nombre: {{user.first_name}}</h2>
+  <h4>Apellido: {{user.last_name}}</h4>
+  <strong>Rol: {{user.role}}</strong>
+  <form action="/api/user/{{user._id}}/documents" method="post">
+    <input type="file" />
+    <button type="submit">subir imagen de user</button>
+  </form>
+
+  {{#if premium}}
+    <form action="/api/products/realtimeproducts" method="post">
+      <button type="submit"> subir productos </button>
+    </form>
+    <form action="/api/session/:uid">Sacar premium</form>
+  {{/if}}
+  {{#else}}
+    <form action="/api/session/:uid" method="get">
+      <button type="submit">Hacete premium </button>
+    </form>
+  {{/else}}
+
+</div>
