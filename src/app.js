@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import { addLogger } from "./services/errors/logger.js";
 import config from "./config/config.js";
+import MongoStore from "connect-mongo";
+
 const app = express();
 app.use(addLogger);
 app.use(express.json());
