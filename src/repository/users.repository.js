@@ -55,7 +55,7 @@ export default class UserRepository {
       <p>Hola, solicitaste recupar tu contraseña</p>
       <p>Deno ser asi no respondas este email</p>
       <p>Podés hacerlo desde acá:</p>
-      <a href="http://127.0.0.1:8080/api/session/forgotPassword/${user._id}/${token}">Cambiar contraseñaa</a>
+      <a href="${config.URL_BASE}/api/session/forgotPassword/${user._id}/${token}">Cambiar contraseñaa</a>
       <br>
       <p>¡Saludos!</p>`;
 
