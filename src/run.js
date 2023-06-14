@@ -11,12 +11,15 @@ import __dirname from "./utils.js";
 import userRouter from "./routes/user.router.js";
 const run = (io, app) => {
   app.use("/api/session", sessionRouter);
+  app.get("/", (req, res) => {
+    res.redirect("/session/login");
+  });
   app.use("/api/user", userRouter);
   app.use("/api/products", passportCall("jwt"), productRouter);
   app.use("/api/carts", cartRouter);
   app.use("/chat", chatRouter);
 
-  app.use("/", mockingProduct);
+  app.use("/mockingproducts", mockingProduct);
 
   io.on("connection", async (socket) => {
     console.log("New cliente connected");
