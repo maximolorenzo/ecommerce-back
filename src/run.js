@@ -16,7 +16,7 @@ const run = (io, app) => {
   app.use("/api/carts", cartRouter);
   app.use("/chat", chatRouter);
 
-  app.use("/mockingproducts", mockingProduct);
+  app.use("/", mockingProduct);
 
   io.on("connection", async (socket) => {
     console.log("New cliente connected");
