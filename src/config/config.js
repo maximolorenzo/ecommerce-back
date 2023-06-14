@@ -10,4 +10,5 @@ export default {
   USER_EMAIL: process.env.USER_EMAIL,
   USER_PASS: process.env.USER_PASS,
   URL_BASE: process.env.URL_BASE,
+  PORT: process.env.PORT,
 };
