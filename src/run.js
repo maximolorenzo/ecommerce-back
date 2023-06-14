@@ -12,7 +12,7 @@ import userRouter from "./routes/user.router.js";
 const run = (io, app) => {
   app.use("/api/session", sessionRouter);
   app.get("/", (req, res) => {
-    res.redirect("/session/login");
+    res.redirect("/api/session/login");
   });
   app.use("/api/user", userRouter);
   app.use("/api/products", passportCall("jwt"), productRouter);
