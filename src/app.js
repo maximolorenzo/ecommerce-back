@@ -10,7 +10,7 @@ import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import { addLogger } from "./services/errors/logger.js";
-
+import config from "./config/config.js";
 const app = express();
 app.use(addLogger);
 app.use(express.json());
@@ -23,9 +23,18 @@ app.set("view engine", "handlebars");
 
 app.use(
   session({
-    secret: "mysecret",
-    resave: true,
-    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: config.mongoURI,
+      dbName: config.mongoDBName,
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      ttl: 15,
+    }),
+    secret: "123456",
+    resave: true, // mantiene la session activa
+    saveUninitialized: true, // guarda cualquier cosa asi sea vacio
   })
 );
 initializePassport();
