@@ -27,26 +27,29 @@ const initializePassport = () => {
       },
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
+        try {
+          const user = await UserService.getOneByEmail(username);
+          if (user) {
+            req.logger.info("User already exits");
+            return done(null, false);
+          }
 
-        const user = await UserService.getOneByEmail(username);
-        if (user) {
-          req.logger.info("User already exits");
-          return done(null, false);
-        }
-
-        const newUser = {
-          first_name,
-          last_name,
-          email,
-          age,
-          password: createHash(password),
-          cart: await CartService.create({}),
-        };
-        if (!first_name || !last_name || !email || !age) {
-          req.logger.error("Faltan Datos");
-        } else {
-          const result = await UserService.create(newUser);
-          return done(null, result);
+          const newUser = {
+            first_name,
+            last_name,
+            email,
+            age,
+            password: createHash(password),
+            cart: await CartService.create({}),
+          };
+          if (!first_name || !last_name || !email || !age) {
+            req.logger.error("Faltan Datos");
+          } else {
+            const result = await UserService.create(newUser);
+            return done(null, result);
+          }
+        } catch (error) {
+          return done("[LOCAL] Error al obtener user " + error);
         }
       }
     )
