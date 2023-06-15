@@ -21,6 +21,7 @@
       <td><strong>Stock</strong></td>
       <td><strong>Categoría</strong></td>
     </tr>
+   
     {{#each data.docs}}
       <div>
         <tr>
@@ -31,12 +32,10 @@
           <td>{{this.stock}}</td>
           <td>{{this.category}}</td>
           <td>
-            <input
-              type="submit"
-              value="add to cart"
-              method="post"
-              action="/api/carts/:cid"
-            />
+            <form action="/api/carts/{{../user.cart}}/product/{{this._id}}" method="post"><input
+                type="submit"
+                value="add to cart"
+              /></form>
           </td>
         </tr>
       </div>

@@ -2,12 +2,12 @@
   <div>
     <h1>Ticket</h1>
 
-    {{#if ticket}}
+    {{#each ticketFinish}}
       <h2>¡Compra realizada con éxito!</h2>
-      <p>Código de la compra: {{ticket.code}}</p>
-      <p>Valor total: {{ticket.amount}}</p>
-      <p>Comprador: {{ticket.purchaser}}</p>
-    {{/if}}
+      <p>Código de la compra: {{this.code}}</p>
+      <p>Valor total: {{this.amount}}</p>
+      <p>Comprador: {{this.purchaser}}</p>
+    {{/each}}
 
   </div>
 </section>

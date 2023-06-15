@@ -10,5 +10,6 @@ export default class UserDTO {
     this.role = user.role;
     this.documents = user.documents || [];
     this.last_connection = user.last_connection;
+    this.cart = user.cart;
   }
 }

@@ -9,6 +9,10 @@ export default class ProductRepository {
     return await this.dao.get();
   };
 
+  getById = async (id) => {
+    return await this.dao.getById(id);
+  };
+
   getPaginate = async (search, options) => {
     return await this.dao.getPaginate(search, options);
   };

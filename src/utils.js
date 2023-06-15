@@ -57,7 +57,7 @@ export const passportCall = (strategy) => {
   return async (req, res, next) => {
     passport.authenticate(strategy, function (err, user, info) {
       if (err) return next(err);
-      console.log("passportCall: user: ", user);
+
       if (!user) {
         return res.status(401).render("errors/base", {
           error: info.messages ? info.messages : info.toString(),
@@ -73,9 +73,10 @@ export const passportCall = (strategy) => {
 export const authorization = (role) => {
   return async (req, res, next) => {
     const user = req.user;
-    console.log(user);
+
     if (!user) return res.status(401).send({ error: "Unauthorized" });
-    if (!role.includes(user.role))
+
+    if (!role.includes(user.user.role))
       return res.status(403).send({ error: "No Permission" });
     next();
   };

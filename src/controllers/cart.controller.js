@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import CustomError from "../services/errors/custom_error.js";
 import { generateCartErrorInfo } from "../services/errors/info.js";
 import EError from "../services/errors/enums.js";
+import productsModel from "../dao/mongo/models/products.model.js";
 
 export const cartGet = async (req, res) => {
   const carts = await CartService.get();
@@ -17,59 +18,55 @@ export const createCart = async (req, res) => {
 };
 
 export const cartId = async (req, res) => {
+  const user = req.user;
   const id = req.params.cid;
   const carts = await CartService.getByIdLean(id);
-  res.render("cart", { data: carts, cid: id });
+  res.render("cart", { data: carts, user });
 };
 
-export const addProduct = async (product, req, res) => {
+export const addProduct = async (req, res) => {
   const cartID = req.params.cid;
   const productID = req.params.pid;
   const quantity = req.body.quantity || 1;
 
-  try {
-    const cart = await CartService.getById(cartID);
-    const infoProduct = await ProductService.getById(productID);
-    if (infoProduct.stock < quantity) {
-      await CustomError.createError({
-        name: "add product error",
-        cause: generateCartErrorInfo(infoProduct),
-        message: "Error dont have Stock",
-        code: EError.INVALID_TYPES_ERROR,
-      });
-    }
-
-    const userID = user.id.toString();
-    const owner = product.owner?.toString();
-
-    if (user.role === "premium" && owner === userID)
-      CustomError.createError({
-        name: "Authorization error",
-        cause: generateAuthorizationError(),
-        message: "You can't add your own product to your cart.",
-        code: EErrors.AUTHORIZATION_ERROR,
-      });
-
-    let found = false;
-    for (let i = 0; i < cart.products.length; i++) {
-      if (cart.products[i].id == productID) {
-        cart.products[i].quantity++;
-        found = true;
-        break;
-      }
-    }
-    if (found == false) {
-      cart.products.push({
-        id: productID,
-        quantity,
-      });
-    }
-    await cart.save();
-  } catch (error) {
-    req.logger.info(error);
+  const cart = await CartService.getById(cartID);
+  const infoProduct = await ProductService.getById(productID);
+  if (infoProduct.stock < quantity) {
+    await CustomError.createError({
+      name: "add product error",
+      cause: generateCartErrorInfo(infoProduct),
+      message: "Error dont have Stock",
+      code: EError.INVALID_TYPES_ERROR,
+    });
   }
 
-  res.json({ status: "success", cart });
+  const userID = req.user.id;
+  const owner = infoProduct?.owner;
+
+  if (req.user.role == "premium" && owner == userID)
+    CustomError.createError({
+      name: "Authorization error",
+      cause: generateAuthorizationError(),
+      message: "You can't add your own product to your cart.",
+      code: EErrors.AUTHORIZATION_ERROR,
+    });
+
+  let found = false;
+  for (let i = 0; i < cart.products.length; i++) {
+    if (cart.products[i].id == productID) {
+      cart.products[i].quantity++;
+      found = true;
+      break;
+    }
+  }
+  if (found == false) {
+    cart.products.push({
+      id: productID,
+      quantity,
+    });
+  }
+  await cart.save();
+  res.redirect("/api/products");
 };
 
 export const deleteCartProduct = async (req, res) => {
@@ -137,29 +134,27 @@ export const cartQuantity = async (req, res) => {
 export const ticketCart = async (req, res) => {
   const cartID = req.params.cid;
   const cart = await CartService.getById(cartID);
+
   let totalPrice = 0;
   const noStock = [];
   const comparation = cart.products;
-  await Promise.all(
-    comparation.map(async (p) => {
-      if (p.id.stock >= p.quantity) {
-        p.id.stock -= p.quantity;
-        ProductService.update(p.id._id, p.id);
-        totalPrice += p.id.price * p.quantity;
-        const productIDX = comparation.findIndex(
-          (item) => item.id._id == p.id._id
-        );
-        comparation.splice(productIDX, 1);
-        await cart.save();
-      } else {
-        noStock.push({
-          title: p.id.title,
-          price: p.id.price,
-          quantity: p.quantity,
-        });
-      }
-    })
-  );
+
+  comparation.map(async (p) => {
+    console.log(p.id.stock);
+    if (p.id.stock >= p.quantity) {
+      p.id.stock -= p.quantity;
+      totalPrice += p.id.price * p.quantity;
+      await productsModel.findByIdAndUpdate({ _id: p.id._id }, p.id);
+    } else {
+      noStock.push({
+        title: p.id.title,
+        price: p.id.price,
+        quantity: p.quantity,
+      });
+    }
+  });
+  console.log(totalPrice);
+
   let ticket;
   if (totalPrice > 0)
     ticket = await TicketModel.create({
@@ -167,6 +162,11 @@ export const ticketCart = async (req, res) => {
       amount: totalPrice,
       code: uuidv4(),
     });
-  console.log(ticket);
-  res.render("ticket", { ticket });
+  const ticketFinish = await TicketModel.find({
+    purchaser: req.user.user.email,
+  })
+    .lean()
+    .exec();
+
+  res.render("ticket", { ticketFinish });
 };

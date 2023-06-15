@@ -1,22 +1,24 @@
-import CartModel from "./models/cart.model.js"
+import CartModel from "./models/cart.model.js";
 
 export default class Cart {
-    constructor() {}
+  constructor() {}
 
-    get = async() => {
-        return await CartModel.find().lean().exec()
-    }
+  get = async () => {
+    return await CartModel.find().lean().exec();
+  };
 
-    create = async(data) => {
-        return await CartModel.create(data)
-        
-    }
+  create = async (data) => {
+    return await CartModel.create(data);
+  };
 
-    getById = async (id) => {
-        return await CartModel.findOne({_id: id})
-    }
+  getById = async (id) => {
+    return await CartModel.findOne({ _id: id }).populate("products.id");
+  };
 
-    getByIdLean = async (id) => {
-        return await CartModel.findOne({_id: id}).lean()
-    }
+  getByIdLean = async (id) => {
+    return await CartModel.findOne({ _id: id })
+      .populate("products.id")
+      .lean()
+      .exec();
+  };
 }

@@ -19,13 +19,13 @@ router.get("/", cartGet);
 //crea el carrito
 router.post("/", createCart);
 //trae el carrito por id
-router.get("/:cid", cartId);
+router.get("/:cid", passportCall("jwt"), cartId);
 
 //agrega un producto al carrito
 router.post(
   "/:cid/product/:pid",
   passportCall("jwt"),
-  authorization(["user", "premium"]),
+
   addProduct
 );
 //elemina un producto del carrito

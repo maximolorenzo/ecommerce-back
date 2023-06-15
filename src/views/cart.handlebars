@@ -2,17 +2,23 @@
 
 <table>
   <tr>
-    <td><strong> CART</strong></td>
     <td><strong> Products</strong></td>
+    <td><strong> price</strong></td>
+    <td><strong> quantity </strong></td>
   </tr>
-  {{#each data}}
+
+  {{#each data.products}}
     <tr>
-      <td>{{products}}</td>
+      {{#this.id}}
+        <td>{{title}}</td>
+        <td>{{price}}</td>
+      {{/this.id}}
+      <td>{{this.quantity}}</td>
     </tr>
 
   {{/each}}
-
+  {{log user.user.cart}}
 </table>
-<form action="/api/carts/{{cid}}/purchase" method="post">
+<form action="/api/carts/{{user.user.cart}}/purchase" method="post">
   <button type="submit">Finalizar compra</button>
 </form>
