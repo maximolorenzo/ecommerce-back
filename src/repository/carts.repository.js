@@ -12,7 +12,7 @@ export default class CartRepository {
   create = async (data) => {
     const dataToInsert = new CartDTO(data);
 
-    return await this.dao.add(dataToInsert);
+    return await this.dao.create(dataToInsert);
   };
   getById = async (id) => {
     return await this.dao.getById(id);

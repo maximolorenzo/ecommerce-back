@@ -33,7 +33,7 @@ export const rolUpdate = async (req, res) => {
   ) {
     user.role = "premium";
     await UserService.updateUser(user._id, user);
-    res.redirect("api/sessions/profile");
+    res.redirect("api/session/profile");
   }
   res.error(
     "Falto subir uno de estos archivos: identificacion,comprobante de domicilio,comprobante de estado de cuenta"
@@ -85,8 +85,8 @@ export const userRol = async (req, res) => {
   const id = req.params.uid;
   const user = await UserService.getOne(id);
   if (!user) res.send(404);
-  if (user.role == "admin") res.redirect("/api/users/profile");
+  if (user.role == "admin") res.redirect("/api/user/profile");
   user.role = user.role == "user" ? "premium" : "user";
   const newUser = await UserService.update(id, user);
-  res.redirect("/api/users/profile");
+  res.redirect("/api/user/profile");
 };

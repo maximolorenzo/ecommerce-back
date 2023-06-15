@@ -23,10 +23,10 @@ router.get("/register", (req, res) => {
 router.post(
   "/register",
   passport.authenticate("register", {
-    failureRedirect: "/sessions/failregister",
+    failureRedirect: "/api/session/failregister",
   }),
   async (req, res) => {
-    res.redirect("/sessions/login");
+    res.redirect("/api/session/login");
   }
 );
 router.get("/failregister", (req, res) => {
@@ -42,7 +42,7 @@ router.get("/login", (req, res) => {
 // API para login
 router.post(
   "/login",
-  passport.authenticate("login", { failureRedirect: "/session/faillogin" }),
+  passport.authenticate("login", { failureRedirect: "/api/session/faillogin" }),
   async (req, res) => {
     if (!req.user) {
       return res

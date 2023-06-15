@@ -36,7 +36,9 @@ export const changePassword = async (req, res) => {
   const newUser = await UserService.updateUser(uid, {
     password: hashedPassword,
   });
-  res.json({ status: "success", payload: newUser }).redirect("/session/login");
+  res
+    .json({ status: "success", payload: newUser })
+    .redirect("/api/session/login");
 };
 
 export const login = async (req, res) => {
@@ -57,7 +59,7 @@ export const logout = async (req, res) => {
   const dateLog = await UserService.updateUser(user._id, {
     last_connection: Date.now(),
   });
-  res.clearCookie("TokenDebon").redirect("/session/login");
+  res.clearCookie("TokenDebon").redirect("/api/session/login");
 };
 
 export const sendRecoveryEmail = async (req, res) => {
